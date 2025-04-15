@@ -1,0 +1,46 @@
+apiVersion: v1
+data:
+  apiToken: ZHQwYzAxLjQ3UFpKSlhIVjVVRkk3VVdVTVNSUVQzNC42VEU3UVFUSzVISVZZVFROQlJLNzJWSEJTQ0RTSkgzV0oyUlBDWDNXVERIVlFYWUozVUNWSFA3WUs1UkdFWjc3
+  dataIngestToken: ZHQwYzAxLldaREhGUEkySEdRVjNDV04zRlhSRE9CWS41WFAzTFpSSEE1SDVaQklGNFBOQVUzVElZT0paS01CUlFDSk5ENktaTEw2MllDRUJJWDNFSjRSN1hHNjU3NVg2
+kind: Secret
+metadata:
+  name: gke-autopilot-bank-of-anthos-app-obvs
+  namespace: dynatrace
+type: Opaque
+---
+apiVersion: dynatrace.com/v1beta3
+kind: DynaKube
+metadata:
+  name: gke-autopilot-bank-of-anthos-app-obvs
+  namespace: dynatrace
+  annotations:
+    feature.dynatrace.com/k8s-app-enabled: "true"
+# Link to api reference for further information: https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/reference/dynakube-parameters
+spec:
+  apiUrl: https://wsf67781.sprint.dynatracelabs.com/api
+  metadataEnrichment:
+    enabled: true
+  oneAgent:
+    applicationMonitoring: {}
+  activeGate:
+    capabilities:
+      - routing
+      - kubernetes-monitoring
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1.5Gi
+      limits:
+        cpu: 1000m
+        memory: 1.5Gi
+  templates:
+    extensionExecutionController:
+      imageRef:
+        repository: wsf67781.sprint.dynatracelabs.com/linux/dynatrace-eec
+        tag: latest
+    logMonitoring:
+      imageRef:
+        repository: public.ecr.aws/dynatrace/dynatrace-logmodule
+        tag: 1.313.16.20250414-164152
+  extensions: {}
+  logMonitoring: {}
