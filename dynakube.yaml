@@ -1,17 +1,17 @@
 apiVersion: v1
 data:
-  apiToken: ZHQwYzAxLjQ3UFpKSlhIVjVVRkk3VVdVTVNSUVQzNC42VEU3UVFUSzVISVZZVFROQlJLNzJWSEJTQ0RTSkgzV0oyUlBDWDNXVERIVlFYWUozVUNWSFA3WUs1UkdFWjc3
-  dataIngestToken: ZHQwYzAxLldaREhGUEkySEdRVjNDV04zRlhSRE9CWS41WFAzTFpSSEE1SDVaQklGNFBOQVUzVElZT0paS01CUlFDSk5ENktaTEw2MllDRUJJWDNFSjRSN1hHNjU3NVg2
+  apiToken: ZHQwYzAxLjUySEpINFk3SkVHS0NQTVlNSlVCRFRWQS5ZWVFHUUVKSk5WQTVTNFVITVdaRzZONkZNVjI1NlNMSzVBQTUyUEJDMzVRQkxFSE5BT0ZBVVdRRE1XTURSTlA0
+  dataIngestToken: ZHQwYzAxLlZRV0w0T1JOMlIyRTVJT1JHQVg1VEpYRS5BWExDWkM1SFRONkFNTDNWUzdVNUw1UEdZTFdIUlA1MkxLQ05XTTdCWjJJNEhCTExBSTJLNU1DUkE3Q1JEMlFF
 kind: Secret
 metadata:
-  name: gke-autopilot-bank-of-anthos-app-obvs
+  name: vogler-boutique-fs
   namespace: dynatrace
 type: Opaque
 ---
 apiVersion: dynatrace.com/v1beta3
 kind: DynaKube
 metadata:
-  name: gke-autopilot-bank-of-anthos-app-obvs
+  name: vogler-boutique-fs
   namespace: dynatrace
   annotations:
     feature.dynatrace.com/k8s-app-enabled: "true"
@@ -21,7 +21,14 @@ spec:
   metadataEnrichment:
     enabled: true
   oneAgent:
-    applicationMonitoring: {}
+    cloudNativeFullStack:
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/master
+          operator: Exists
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/control-plane
+          operator: Exists
   activeGate:
     capabilities:
       - routing
@@ -38,9 +45,5 @@ spec:
       imageRef:
         repository: wsf67781.sprint.dynatracelabs.com/linux/dynatrace-eec
         tag: latest
-    logMonitoring:
-      imageRef:
-        repository: public.ecr.aws/dynatrace/dynatrace-logmodule
-        tag: 1.313.16.20250414-164152
   extensions: {}
   logMonitoring: {}
